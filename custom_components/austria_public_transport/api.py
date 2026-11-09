@@ -26,6 +26,13 @@ def _clean_text(text: str | None) -> str | None:
     return " ".join(text.split())
 
 
+def _clean_reason(reason: str | None) -> str | None:
+    """Drop the literal "undefined" the API sends when no reason is set."""
+    if not reason or reason == "undefined":
+        return None
+    return reason
+
+
 async def async_fetch_departures(
     session: aiohttp.ClientSession, stop_id: str
 ) -> dict[str, Any]:
@@ -158,7 +165,9 @@ async def async_fetch_traffic_info(
                     "location": _clean_text(
                         item.get("location") or attributes.get("location")
                     ),
-                    "reason": attributes.get("reason") or item.get("reasonName"),
+                    "reason": _clean_reason(
+                        attributes.get("reason") or item.get("reasonName")
+                    ),
                     "priority": item.get("priority"),
                     "lines": lines,
                     "stops": stops,

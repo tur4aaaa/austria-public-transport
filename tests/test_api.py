@@ -431,3 +431,18 @@ async def test_fetch_traffic_info_unexpected_error() -> None:
     result = await async_fetch_traffic_info(session)
 
     assert result == {"message": "No data"}
+
+
+@pytest.mark.asyncio
+async def test_fetch_traffic_info_undefined_reason_is_none() -> None:
+    """Test that the literal "undefined" reason from the API becomes None."""
+    session = _make_session(
+        {
+            "data": {"trafficInfos": [{"name": "X1", "reasonName": "undefined"}]},
+            "message": {"value": "OK", "messageCode": 1},
+        }
+    )
+
+    result = await async_fetch_traffic_info(session)
+
+    assert result["alerts"][0]["reason"] is None
