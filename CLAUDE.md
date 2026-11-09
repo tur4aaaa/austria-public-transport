@@ -16,7 +16,7 @@ Standard HA coordinator pattern with isolated API layer. All code lives in `cust
 - `oebb_api.py` -- pure async HTTP client for OeBB Scotty API (no HA imports, independently testable)
 - `coordinator.py` -- `DataUpdateCoordinator` subclass, one per stop, polls every 60s
 - `sensor.py` -- `CoordinatorEntity` + `SensorEntity`, supports YAML and config entry setup
-- `__init__.py` -- entry lifecycle, service registration (`fetch_departures`, `oebb_search_station`, `oebb_station_board`, `oebb_trip_search`, `oebb_service_alerts`,`wienerlinien_traffic_info`)
+- `__init__.py` -- entry lifecycle, service registration (`fetch_departures`, `oebb_search_station`, `oebb_station_board`, `oebb_trip_search`, `oebb_service_alerts`, `wienerlinien_traffic_info`)
 - `config_flow.py` -- `ConfigFlow` + `OptionsFlow` for UI-driven setup
 - `const.py` -- all constants (URLs, keys, defaults)
 
