@@ -8,7 +8,13 @@ from typing import Any
 
 import aiohttp
 
-from .const import API_ENDPOINT, API_TIMEOUT, TRAFFIC_INFO_ENDPOINT
+from .const import (
+    API_ENDPOINT,
+    API_TIMEOUT,
+    TRAFFIC_INFO_CATEGORY_ORDER,
+    TRAFFIC_INFO_ENDPOINT,
+    TRAFFIC_INFO_OK_CODE,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -110,6 +116,14 @@ async def async_fetch_traffic_info(
             response = await session.get(TRAFFIC_INFO_ENDPOINT)
             data = await response.json()
 
+            message = data.get("message") or {}
+        if message.get("messageCode") != TRAFFIC_INFO_OK_CODE:
+            _LOGGER.warning(
+                "Wiener Linien traffic info API error %s: %s",
+                message.get("messageCode"),
+                message.get("value"),
+            )
+            return {"message": message.get("value") or "No data"}
         payload = data.get("data") or {}
         categories = {
             cat.get("id"): cat.get("name")
@@ -150,12 +164,25 @@ async def async_fetch_traffic_info(
                 }
             )
 
+        alerts.sort(
+            key=lambda alert: TRAFFIC_INFO_CATEGORY_ORDER.get(
+                alert["category"], len(TRAFFIC_INFO_CATEGORY_ORDER)
+            )
+        )
+        total_count = len(alerts)
         alerts = alerts[:max_alerts]
-        return {"alerts_count": len(alerts), "alerts": alerts}
+        return {
+            "alerts_count": len(alerts),
+            "total_count": total_count,
+            "alerts": alerts,
+        }
 
     except TimeoutError:
         _LOGGER.error("Timeout fetching Wiener Linien traffic info")
         return {"message": "Timeout"}
     except aiohttp.ClientError as err:
         _LOGGER.error("Error fetching Wiener Linien traffic info: %s", err)
+        return {"message": "No data"}
+    except Exception as err:
+        _LOGGER.warning("Unexpected error fetching Wiener Linien traffic info: %s", err)
         return {"message": "No data"}

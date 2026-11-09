@@ -320,7 +320,8 @@ SAMPLE_TRAFFIC_INFO = {
                 "relatedStops": [119],
             },
         ],
-    }
+    },
+    "message": {"value": "OK", "messageCode": 1},
 }
 
 
@@ -332,7 +333,7 @@ async def test_fetch_traffic_info_normalizes_all_categories() -> None:
     result = await async_fetch_traffic_info(session)
 
     assert result["alerts_count"] == 3
-    elevator, long_term, short_term = result["alerts"]
+    long_term, short_term, elevator = result["alerts"]
     assert elevator["category"] == "aufzugsinfo"
     assert elevator["status"] == "außer Betrieb"
     assert elevator["reason"] == "An der Instandsetzung wird bereits gearbeitet."
@@ -371,7 +372,12 @@ async def test_fetch_traffic_info_max_alerts() -> None:
 @pytest.mark.asyncio
 async def test_fetch_traffic_info_missing_fields_do_not_crash() -> None:
     """Test that  alert with almost no fields is still returned."""
-    session = _make_session({"data": {"trafficInfos": [{"name": "X1"}]}})
+    session = _make_session(
+        {
+            "data": {"trafficInfos": [{"name": "X1"}]},
+            "message": {"value": "OK", "messageCode": 1},
+        }
+    )
 
     result = await async_fetch_traffic_info(session)
 
