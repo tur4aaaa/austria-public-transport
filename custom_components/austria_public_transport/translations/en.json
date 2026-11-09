@@ -41,7 +41,7 @@
         }
       }
     },
-        "wienerlinien_traffic_info": {
+    "wienerlinien_traffic_info": {
       "name": "Wiener Linien: Traffic Info",
       "description": "Fetch current Wiener Linien disruptions and elevator outages.",
       "fields": {

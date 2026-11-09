@@ -45,7 +45,7 @@ Documents the languages, frameworks, build tools, testing infrastructure, and ex
 
 ### External APIs
 - Wiener Linien OGD Realtime API (`https://www.wienerlinien.at/ogd_realtime/monitor`) -- read-only, public, no auth required.
-- A second Wiener Linien endpoint (`trafficInfoList`) is defined in `const.py` but not currently used.
+- Wiener Linien `trafficInfoList` endpoint (`https://www.wienerlinien.at/ogd_realtime/trafficInfoList`) -- disruptions and elevator outages, used by the `wienerlinien_traffic_info` service.
 - OeBB Scotty API (`https://fahrplan.oebb.at/bin/mgate.exe`) -- JSON POST API with embedded authentication (AID token). Used for station search, station boards, and trip planning. Not officially documented (reverse-engineered from webapp).
 
 ### Distribution
@@ -88,7 +88,6 @@ the file-by-file download for them -- downgrades keep working.
 
 ## Known Risks
 - Version in `pyproject.toml` is out of sync with `manifest.json` -- could cause confusion if `pyproject.toml` version is ever referenced.
-- `trafficInfoList` endpoint constant is defined but unused -- dead code.
 - `uv.lock` exists locally but is untracked and not in `.gitignore` -- local environment reproducibility is not enforced for contributors or CI.
 
 ## Extension Guidelines

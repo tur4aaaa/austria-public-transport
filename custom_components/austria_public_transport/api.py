@@ -108,15 +108,18 @@ async def async_fetch_traffic_info(
     stop_id: int | None = None,
     max_alerts: int = 20,
 ) -> dict[str, Any]:
-    """Getting and normalizing Wiener Linien Traffic info(disruptions, elevators).
-    Returns a dict with alerts_count and an alerts list. Returns a dict with
+    """Fetch and normalize Wiener Linien traffic info (disruptions, elevators).
+
+    Disruptions are listed before elevator outages, then cut to max_alerts.
+    Returns a dict with alerts_count, total_count (matches before the cut)
+    and an alerts list. Returns a dict with just 'message' on error.
     """
     try:
         async with asyncio.timeout(API_TIMEOUT):
             response = await session.get(TRAFFIC_INFO_ENDPOINT)
             data = await response.json()
 
-            message = data.get("message") or {}
+        message = data.get("message") or {}
         if message.get("messageCode") != TRAFFIC_INFO_OK_CODE:
             _LOGGER.warning(
                 "Wiener Linien traffic info API error %s: %s",
@@ -155,7 +158,7 @@ async def async_fetch_traffic_info(
                     "location": _clean_text(
                         item.get("location") or attributes.get("location")
                     ),
-                    "reason": attributes.get("reason"),
+                    "reason": attributes.get("reason") or item.get("reasonName"),
                     "priority": item.get("priority"),
                     "lines": lines,
                     "stops": stops,

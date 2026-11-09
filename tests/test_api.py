@@ -361,12 +361,17 @@ async def test_fetch_traffic_info_filters() -> None:
 
 @pytest.mark.asyncio
 async def test_fetch_traffic_info_max_alerts() -> None:
-    """Test that the result is capped in max_alerts."""
+    """Test that elevator outages are cut first and total_count shows the cut."""
     session = _make_session(SAMPLE_TRAFFIC_INFO)
 
     result = await async_fetch_traffic_info(session, max_alerts=2)
 
     assert result["alerts_count"] == 2
+    assert result["total_count"] == 3
+    assert [a["category"] for a in result["alerts"]] == [
+        "stoerunglang",
+        "stoerungkurz",
+    ]
 
 
 @pytest.mark.asyncio
@@ -404,3 +409,25 @@ async def test_fetch_traffic_info_timeout() -> None:
     result = await async_fetch_traffic_info(session)
 
     assert result == {"message": "Timeout"}
+
+
+@pytest.mark.asyncio
+async def test_fetch_traffic_info_api_error() -> None:
+    """Test that API error message is returned, not an empty alert list."""
+    session = _make_session(
+        {"data": {}, "message": {"value": "Datenbankfehler", "messageCode": 311}}
+    )
+
+    result = await async_fetch_traffic_info(session)
+
+    assert result == {"message": "Datenbankfehler"}
+
+
+@pytest.mark.asyncio
+async def test_fetch_traffic_info_unexpected_error() -> None:
+    """Test that an unexpected error is caught and reported as no data"""
+    session = _make_session({}, raise_error=ValueError("not JSON"))
+
+    result = await async_fetch_traffic_info(session)
+
+    assert result == {"message": "No data"}

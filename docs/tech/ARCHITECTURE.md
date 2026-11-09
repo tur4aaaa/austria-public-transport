@@ -83,6 +83,7 @@ api.py  <--  coordinator.py  <--  sensor.py
   - `oebb_station_board` -- OeBB departures/arrivals at a station
   - `oebb_trip_search` -- OeBB connections between two stations
   - `oebb_service_alerts` -- OeBB service disruptions and infrastructure alerts
+  - `wienerlinien_traffic_info` -- Wiener Linien disruptions and elevator outages (`api.async_fetch_traffic_info`)
 - Defines `_require_one_of(*keys)` -- voluptuous validator factory enforcing "at least one of these keys" on service schemas (used by station board and trip search)
 - Stores coordinators in `hass.data[DOMAIN][entry.entry_id]`
 

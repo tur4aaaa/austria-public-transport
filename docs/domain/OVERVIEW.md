@@ -89,7 +89,7 @@ Three on-demand services for OeBB train data. All return data as service respons
 
 **Wiener Linien OGD Realtime API** -- Public, no authentication.
 - Active endpoint: `https://www.wienerlinien.at/ogd_realtime/monitor?stopId=<id>`
-- Unused endpoint: `https://www.wienerlinien.at/ogd_realtime/trafficInfoList` (defined in `const.py`, likely a stub for future traffic disruption features)
+- Traffic info endpoint: `https://www.wienerlinien.at/ogd_realtime/trafficInfoList` (used by `wienerlinien_traffic_info`)
 
 **OeBB Scotty API** -- Public, embedded authentication (AID token in request body).
 - Single endpoint: `https://fahrplan.oebb.at/bin/mgate.exe` (POST with JSON body)
@@ -111,7 +111,6 @@ Three on-demand services for OeBB train data. All return data as service respons
 
 ## Known Risks
 - The RBL stop ID system is Wiener Linien-specific. If the numbering scheme changes, all user configurations break.
-- The `trafficInfoList` endpoint is defined but not integrated -- users may expect disruption/delay information that is not yet available.
 - No data validation on API responses beyond checking for empty monitors. Malformed API responses could propagate unexpected data to sensor attributes.
 - The OeBB Scotty API is reverse-engineered and undocumented -- response structures or auth tokens may change without notice.
 - OeBB station name auto-resolution picks the first LocMatch result, which may be ambiguous for short queries (e.g., "Wien" matches many stations).

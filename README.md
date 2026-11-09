@@ -53,8 +53,7 @@ data:
 response_variable: departures
 ```
 
-The response includes `departures_count`, `stop_id`, `stop_name`, `departures` (list), and `server_time`.
-
+Disruptions are listed before elevator outages, so `max_alerts` cuts elevator outages first. The response includes `alerts_count`, `total_count` (all matching alerts before the `max_alerts` cut, so you can tell the list was truncated) and `alerts` (list with `id`, `category`, `title`, `description`, `status`, `location`, `reason`, `priority`, `lines`, `stops`, `start`, `end`).
 ---
 ### `austria_public_transport.wienerlinien_traffic_info`
 

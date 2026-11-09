@@ -41,7 +41,7 @@
         }
       }
     },
-        "wienerlinien_traffic_info": {
+    "wienerlinien_traffic_info": {
       "name": "Wiener Linien: Störungsinfo",
       "description": "Aktuelle Störungen und Aufzugsausfälle der Wiener Linien abrufen.",
       "fields": {

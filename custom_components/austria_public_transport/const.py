@@ -20,9 +20,11 @@ FETCH_DEPARTURES_SERVICE_NAME = "fetch_departures"
 WIENERLINIEN_TRAFFIC_INFO_SERVICE_NAME = "wienerlinien_traffic_info"
 # Category names used by Wiener Linien trafficINfoList API
 TRAFFIC_INFO_CATEGORIES = ["aufzugsinfo", "stoerunglang", "stoerungkurz"]
+# Response order: disruptions before elevator outages, so max_alerts
+# cuts elevator outages first
 
 TRAFFIC_INFO_CATEGORY_ORDER = {"stoerunglang": 0, "stoerungkurz": 1, "aufzugsinfo": 2}
-# proiritized traffic disruptions over elevator outages
+# message.messageCode of a successfull Wiener Linien OGD response
 
 TRAFFIC_INFO_OK_CODE = 1
 # successful API response code
