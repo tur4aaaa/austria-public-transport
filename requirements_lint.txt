@@ -6,4 +6,4 @@
 #
 # The Tests job still installs its dependencies inline and unpinned; that is a
 # larger gap and is deliberately not addressed here.
-ruff==0.17.2
+ruff==0.17.4
